@@ -3,9 +3,6 @@ package red;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Centro de monitoreo que AGREGA nodos IoT.
- */
 public class CentroMonitoreo {
 
     private String nombre;
@@ -16,19 +13,23 @@ public class CentroMonitoreo {
         this.nodos = new ArrayList<>();
     }
 
-    /** Agrega un nodo ya existente (agregación). */
     public void agregarNodo(NodoIoT nodo) {
-        // TODO: implementar
+        if (nodo != null && !nodos.contains(nodo)) {
+            nodos.add(nodo);
+        }
     }
 
-    /**
-     * Reporte: una línea por nodo con su id y su promedio de temperatura.
-     */
     public List<String> reporteTemperaturas() {
-        // TODO: implementar
-        return new ArrayList<>();
+        List<String> reporte = new ArrayList<>();
+        for (NodoIoT nodo : nodos) {
+            if (nodo != null) {
+                String linea = "Nodo: " + nodo.getId() + " - Promedio Temp: " + nodo.promedioTemperatura();
+                reporte.add(linea);
+            }
+        }
+        return reporte;
     }
 
     public String getNombre() { return nombre; }
-    public ArrayList<NodoIoT> getNodos() { return nodos; }
+    public ArrayList<NodoIoT> getNodos() { return new ArrayList<>(nodos); }
 }

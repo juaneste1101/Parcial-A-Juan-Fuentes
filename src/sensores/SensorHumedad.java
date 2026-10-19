@@ -2,9 +2,6 @@ package sensores;
 
 import java.util.Random;
 
-/**
- * Sensor de humedad relativa. Rango válido: [0, 100] %.
- */
 public class SensorHumedad extends Sensor {
 
     public static final int MIN = 0;
@@ -17,13 +14,15 @@ public class SensorHumedad extends Sensor {
 
     @Override
     public int generarLectura() {
-        // TODO: implementar
-        return 0;
+        int minGen = MIN - 10;
+        int maxGen = MAX + 10;
+        int valor = RND.nextInt((maxGen - minGen) + 1) + minGen;
+        registrarLectura(valor);
+        return valor;
     }
 
     @Override
     public boolean fueraDeRango(int valor) {
-        // TODO: implementar
-        return false;
+        return valor < MIN || valor > MAX;
     }
 }

@@ -1,8 +1,5 @@
 package servicios;
 
-/**
- * Lectura de un sensor. DEPENDE de ValidadorLectura (no lo guarda como atributo).
- */
 public class Lectura {
 
     private int valor;
@@ -15,10 +12,9 @@ public class Lectura {
         this.timestamp = timestamp;
     }
 
-    /** Usa ValidadorLectura como dependencia puntual. */
     public boolean esValida(String tipo, ValidadorLectura validador) {
-        // TODO: implementar
-        return false;
+        if (validador == null) return false;
+        return validador.esValida(tipo, this.valor);
     }
 
     public int getValor() { return valor; }

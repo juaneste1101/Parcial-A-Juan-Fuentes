@@ -4,10 +4,6 @@ import sensores.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Nodo IoT que COMPONE sensores.
- * Los sensores se crean dentro del nodo (composición real).
- */
 public class NodoIoT {
 
     private String id;
@@ -18,33 +14,62 @@ public class NodoIoT {
         this.sensores = new ArrayList<>();
     }
 
-    /**
-     * Crea y agrega un sensor del tipo indicado dentro del nodo.
-     * Tipo: "TEMPERATURA", "HUMEDAD", "LUMINOSIDAD".
-     * Retorna el sensor creado, o null si el tipo es inválido.
-     */
     public Sensor agregarSensor(String tipo, String idSensor, int capacidad) {
-        // TODO: implementar (polimorfismo + composición)
-        return null;
+        if (tipo == null || idSensor == null) {
+            return null;
+        }
+
+        Sensor nuevoSensor = null;
+
+        switch (tipo.toUpperCase().trim()) {
+            case "TEMPERATURA":
+                nuevoSensor = new SensorTemperatura(idSensor, capacidad);
+                break;
+            case "HUMEDAD":
+                nuevoSensor = new SensorHumedad(idSensor, capacidad);
+                break;
+            case "LUMINOSIDAD":
+                nuevoSensor = new SensorLuminosidad(idSensor, capacidad);
+                break;
+            default:
+                return null;
+        }
+
+        sensores.add(nuevoSensor);
+        return nuevoSensor;
     }
 
-    /**
-     * Promedio de temperatura del nodo. Retorna 0 si no hay sensores de temperatura.
-     * Pista: usar instanceof para filtrar.
-     */
     public double promedioTemperatura() {
-        // TODO: implementar
-        return 0;
+        double sumaPromedios = 0;
+        int contadorTemp = 0;
+
+        for (Sensor s : sensores) {
+            if (s instanceof SensorTemperatura) {
+                sumaPromedios += s.promedioUltimasLecturas();
+                contadorTemp++;
+            }
+        }
+
+        if (contadorTemp == 0) {
+            return 0.0;
+        }
+
+        return sumaPromedios / contadorTemp;
     }
 
-    /**
-     * Lista de sensores cuya última lectura está fuera de rango.
-     */
     public List<Sensor> sensoresFueraDeRango() {
-        // TODO: implementar
-        return new ArrayList<>();
+        List<Sensor> anomalos = new ArrayList<>();
+        for (Sensor s : sensores) {
+            if (s != null && s.getCantidadLecturas() > 0) {
+                int ultimaLectura = s.getUltimaLectura();
+                if (s.fueraDeRango(ultimaLectura)) {
+                    anomalos.add(s);
+                }
+            }
+        }
+        return anomalos;
     }
 
     public String getId() { return id; }
-    public ArrayList<Sensor> getSensores() { return sensores; }
+    public ArrayList<Sensor> getSensores() { return new ArrayList<>(sensores); }
 }
